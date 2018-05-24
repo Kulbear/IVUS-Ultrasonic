@@ -1,0 +1,13 @@
+.ipynb_checkpoints
+
+.pyc
+
+__pycache__
+
+configs
+
+*_FILES
+
+exp*
+
+result.txt
