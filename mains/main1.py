@@ -8,7 +8,7 @@ from utils.logger import Logger
 from utils.utils import get_args
 
 # change this when working on different models
-from models.journal_v1 import Model
+from models.patch_v1 import Model
 # change this when training with prob masks
 from trainers.sigmoid_model_trainer import SigmoidTrainer
 

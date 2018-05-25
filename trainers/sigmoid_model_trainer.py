@@ -49,12 +49,15 @@ class SigmoidTrainer(BaseTrain):
 
     def test(self):
         test_losses = []
+        print('Getting')
         test_subsets = self.data.get_test_subsets(self.config.batch_size)
+        print(test_subsets[0][0].shape)
+        print(test_subsets[0][1].shape)
         for subset in test_subsets:
             test_x, test_y = subset
             feed_dict = {
                 self.model.x: test_x,
-                self.model.original_y: test_y,
+                self.model.y: test_y,
                 self.model.is_training: False
             }
             loss = self.sess.run(self.model.cross_entropy, feed_dict=feed_dict)
@@ -64,10 +67,10 @@ class SigmoidTrainer(BaseTrain):
         return np.sum(test_losses) / self.data.test_input.shape[0]
 
     def train_step(self):
-        batch_x, batch_y = next(self.data.next_batch(self.config.batch_size))
+        batch_x, batch_y = self.data.next_batch(self.config.batch_size)
         feed_dict = {
             self.model.x: batch_x,
-            self.model.original_y: batch_y,
+            self.model.y: batch_y,
             self.model.is_training: True
         }
         _, loss = self.sess.run(
