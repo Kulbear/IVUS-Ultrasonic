@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 import _init_paths
-from data_loader.data_generator_40mhz import IVUSDataGenerator
+from data_loader.data_generator_ import IVUSDataGenerator
 from utils.config import process_config
 from utils.dirs import create_dirs
 from utils.logger import Logger

@@ -37,6 +37,7 @@ class IVUSDataGenerator:
                 path.join(
                     path.abspath(cdir), data_dir,
                     'raw_train_{}_labels_512.npy'.format(target))), -1)
+
         print(self.input.shape)
         print(self.y.shape)
 
@@ -64,8 +65,7 @@ class IVUSDataGenerator:
             end_to_end=True)
         aug_x, aug_y = aug.generate()
         aug_x = aug_x[:aug_x.shape[0] // 5 * 3]  # select the first 3/5
-        aug_y = aug_y[:aug_y.shape[0] // 5 *
-                      3]  # since the second 1/2 are all black images
+        aug_y = aug_y[:aug_y.shape[0] // 5 * 3]
 
         final_x = []
         final_y = []
