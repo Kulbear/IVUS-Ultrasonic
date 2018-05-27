@@ -49,7 +49,6 @@ class SigmoidTrainer(BaseTrain):
 
     def test(self):
         test_losses = []
-        print('Testing...')
         test_subsets = self.data.get_test_subsets(self.config.batch_size)
         for subset in test_subsets:
             test_x, test_y = subset
@@ -67,7 +66,7 @@ class SigmoidTrainer(BaseTrain):
     def train_step(self):
         batch_x, batch_y = self.data.next_batch(self.config.batch_size)
         feed_dict = {
-            self.model.x: np.expand_dims(batch_x, axis=-1),
+            self.model.x: batch_x,
             self.model.y: batch_y,
             self.model.is_training: True
         }

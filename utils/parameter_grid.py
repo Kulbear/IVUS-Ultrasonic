@@ -14,14 +14,14 @@ parameter_dict = {
     "num_epochs": [256],
     "num_iter_per_epoch": [32],
     "learning_rate": [1e-4],  # tested a lot, no need to change
-    "batch_size": [8],  # can adjust this, but need more memory
-    "state_size": [[128, 128, 1]],  # iamge size
+    "batch_size": [4],  # can adjust this, but need more memory
+    "state_size": [[256, 256, 1]],  # iamge size
     "max_to_keep": [1],  # kept model weights, don't change
     "is_training": [1],  # for batch norm, don't change
     "activation": ['prelu'],
-    "pooling": ['max', 'avg'],
-    "target": ['Media'],  # task
-    "run": range(1, 2)  # how many models we want for each
+    "pooling": ['max'],
+    "target": ['Media', 'Lumen'],  # task
+    "run": range(1, 6)  # how many models we want for each
 }
 
 grid = sorted(list(ParameterGrid(parameter_dict)), key=lambda x: x['target'])

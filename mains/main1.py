@@ -1,14 +1,14 @@
 import tensorflow as tf
 
 import _init_paths
-from data_loader.data_generator_ import IVUSDataGenerator
+from data_loader.data_generator_40mhz import IVUSDataGenerator
 from utils.config import process_config
 from utils.dirs import create_dirs
 from utils.logger import Logger
 from utils.utils import get_args
 
 # change this when working on different models
-from models.patch_v1 import Model
+from models.deconv_v1 import Model
 # change this when training with prob masks
 from trainers.sigmoid_model_trainer import SigmoidTrainer
 
@@ -27,7 +27,6 @@ def main():
 
     # create the experiments dirs
     create_dirs([config.summary_dir, config.checkpoint_dir])
-    print(config.exp_name)
     # create tensorflow session
     sess = tf.Session()
     # create instance of the model you want
