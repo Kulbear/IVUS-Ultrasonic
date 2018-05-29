@@ -143,7 +143,6 @@ def downsampling_branch(net,
 
 def upsampling_branch(net,
                       depth,
-                      pooling,
                       activation,
                       is_training,
                       lyr_name,
@@ -168,26 +167,14 @@ def restoring_branch(net,
                      depth,
                      activation,
                      is_training,
-                     config={},
-                     init=he_init):
+                     init=he_init,
+                     name=''):
     net_ = L.conv2d_transpose(
-        net,
-        depth, [3, 3],
-        strides=2,
-        padding='SAME',
-        kernel_initializer=he_init,
-        name='Res_W1')
-    net_ = batch_norm(net_, is_training, scope='Res_BN1')
-    net_ = activation(net_, name='Res_A1')
-    if config.state_size[0] == 128:
-        net_ = L.conv2d_transpose(
-            net_,
-            depth, [3, 3],
-            strides=2,
-            padding='SAME',
-            kernel_initializer=he_init,
-            name='Res_W2')
-        net_ = batch_norm(net_, is_training, scope='Res_BN2')
-        net_ = activation(net_, name='Res_A2')
+        net, depth, [2, 2], strides=2, padding='SAME', kernel_initializer=init, name='{}_W1'.format(name))
+    net_ = activation(net_, name='{}_A1'.format(name))
+    net_ = batch_norm(net_, is_training, scope='{}_BN1'.format(name))
+    net_ = L.conv2d(net_, depth, [3, 3], strides=1, padding='SAME', kernel_initializer=init, name='{}_W2'.format(name))
+    net_ = activation(net_, name='{}_A2'.format(name))
+    net_ = batch_norm(net_, is_training, scope='{}_BN2'.format(name))
 
     return net_

@@ -8,7 +8,6 @@ import tensorlayer as tl
 
 
 def _net(input_tensor, is_training=True, config={}):
-
     he_init = tf.keras.initializers.he_normal()
 
     if config['activation'] == 'prelu':
@@ -98,7 +97,7 @@ def _net(input_tensor, is_training=True, config={}):
                 lyr_name,
                 init=he_init)
 
-    net = restoring_branch(net, 32, activation, is_training, config=config)
+    # net = restoring_branch(net, 32, activation, is_training, config=config)
 
     net = L.conv2d(
         net,
@@ -108,7 +107,7 @@ def _net(input_tensor, is_training=True, config={}):
         kernel_initializer=he_init,
         name='Output')
     net = tf.nn.sigmoid(net, name='Output_Sigmoid')
-    net = tf.reshape(net, (-1, 512, 512))
+    # net = tf.reshape(net, (-1, None, None))
 
     return net
 
@@ -129,10 +128,8 @@ class Model(BaseModel):
     def build_model(self):
         self.is_training = tf.placeholder(tf.bool, ())
         state_size = self.config['state_size']
-        input_shape = [None, *state_size]
-        self.x = tf.placeholder(tf.float32, shape=input_shape)
-        self.original_y = tf.placeholder(tf.float32, (None, 512, 512))
-        self.y = tf.reshape(self.original_y, (-1, 512, 512))
+        self.x = tf.placeholder(tf.float32, (None, None, None, 1))
+        self.y = tf.placeholder(tf.float32, (None, None, None, 1))
 
         self.logits = _net(self.x, config=self.config)
 
@@ -142,7 +139,7 @@ class Model(BaseModel):
                 self.logits, self.y, axis=[1, 2])
             self.train_step = tf.train.AdamOptimizer(
                 self.config.learning_rate).minimize(
-                    self.cross_entropy, global_step=self.global_step_tensor)
+                self.cross_entropy, global_step=self.global_step_tensor)
 
     def init_saver(self):
         # here you initalize the tensorflow saver that will be used in saving the checkpoints.

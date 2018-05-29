@@ -1,14 +1,12 @@
 import tensorflow as tf
 
 import _init_paths
-from data_loader.data_generator_40mhz import IVUSDataGenerator
-from utils.config import process_config
-from utils.dirs import create_dirs
+from data_loader.data_generator_online_aug import IVUSDataGenerator
 from utils.logger import Logger
-from utils.utils import get_args
+from utils.utils import get_args, create_dirs, process_config
 
 # change this when working on different models
-from models.journal_v1 import Model
+from models.ivusnet import Model
 # change this when training with prob masks
 from trainers.sigmoid_model_trainer import SigmoidTrainer
 
@@ -27,7 +25,6 @@ def main():
 
     # create the experiments dirs
     create_dirs([config.summary_dir, config.checkpoint_dir])
-    print(config.exp_name)
     # create tensorflow session
     sess = tf.Session()
     # create instance of the model you want
@@ -47,6 +44,7 @@ def main():
 
 if __name__ == '__main__':
     import time
+
     s = time.time()
     main()
     print('Time used', time.time() - s)
