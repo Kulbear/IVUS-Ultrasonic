@@ -96,25 +96,26 @@ def _net(input_tensor, is_training=True, config={}):
                 lyr_name,
                 init=he_init)
 
-    # restore to original size
-    net = restoring_branch(
-        net,
-        16,
-        activation,
-        is_training,
-        init=he_init,
-        name='Res1')
+    with tf.variable_scope('Output_Deconv'):
+        # restore to original size
+        net = restoring_branch(
+            net,
+            32, # TODO: investigate this depth
+            activation,
+            is_training,
+            init=he_init,
+            name='Deconv_1')
 
-    # output layer
-    net = L.conv2d(
-        net,
-        1, [5, 5],
-        strides=1,
-        padding='SAME',
-        kernel_initializer=he_init,
-        name='Output')
-    net = tf.nn.sigmoid(net, name='Output_Sigmoid')
-    net = tf.reshape(net, (-1, 512, 512))
+        # output layer
+        net = L.conv2d(
+            net,
+            1, [5, 5],
+            strides=1,
+            padding='SAME',
+            kernel_initializer=he_init,
+            name='Output')
+        net = tf.nn.sigmoid(net, name='Output_Sigmoid')
+        net = tf.reshape(net, (-1, 512, 512))
 
     return net
 
