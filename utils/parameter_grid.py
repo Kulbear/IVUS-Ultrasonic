@@ -14,13 +14,13 @@ parameter_dict = {
     "num_epochs": [256],
     "num_iter_per_epoch": [32],
     "learning_rate": [1e-4],  # tested a lot, no need to change
-    "batch_size": [4],  # can adjust this, but need more memory
-    "state_size": [[256, 256, 1]],  # iamge size
+    "batch_size": [6],  # change to larger values requires more memory
+    "state_size": [[256, 256, 1]],  # image size
     "max_to_keep": [1],  # kept model weights, don't change
     "is_training": [1],  # for batch norm, don't change
     "activation": ['prelu'],
-    "pooling": ['max'],
-    "target": ['Media', 'Lumen'],  # task
+    "pooling": ['max', 'avg'],
+    "target": ['Lumen'],  # task
     "run": range(1, 6)  # how many models we want for each
 }
 

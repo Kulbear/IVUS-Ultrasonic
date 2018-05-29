@@ -8,7 +8,6 @@ import tensorlayer as tl
 
 
 def _net(input_tensor, is_training=True, config={}):
-
     he_init = tf.keras.initializers.he_normal()
 
     if config['activation'] == 'prelu':
@@ -24,7 +23,7 @@ def _net(input_tensor, is_training=True, config={}):
     # encoder
     net = input_tensor
     enc_lyr_names = ['Enc_1', 'Enc_2', 'Enc_3', 'Enc_4', 'Enc_5', 'Enc_6']
-    enc_lyr_depth = [32, 64, 128, 256, 512, 1024]
+    enc_lyr_depth = [16, 32, 64, 128, 256, 512]
     enc_lyrs = {}
     assert len(enc_lyr_names) == len(enc_lyr_depth)
     for idx in range(len(enc_lyr_names)):
@@ -60,7 +59,7 @@ def _net(input_tensor, is_training=True, config={}):
 
     # decoder
     dec_lyr_names = ['Dec_5', 'Dec_4', 'Dec_3', 'Dec_2', 'Dec_1']
-    dec_lyr_depth = [512, 256, 128, 64, 32]
+    dec_lyr_depth = [256, 128, 64, 32, 16]
     assert len(dec_lyr_names) == len(dec_lyr_depth)
     for idx in range(len(dec_lyr_names)):
         lyr_name = dec_lyr_names[idx]
@@ -69,7 +68,6 @@ def _net(input_tensor, is_training=True, config={}):
             net = upsampling_branch(
                 net,
                 dec_lyr_depth[idx],
-                pooling,
                 activation,
                 is_training,
                 lyr_name,
@@ -98,14 +96,16 @@ def _net(input_tensor, is_training=True, config={}):
                 lyr_name,
                 init=he_init)
 
-    net = L.conv2d_transpose(
-        net, 64, [2, 2], strides=2, padding='SAME', kernel_initializer=he_init, name='USamp_W1')
-    net = activation(net, name='USamp_A1')
-    net = batch_norm(net, is_training, scope='USamp_BN1')
-    net = L.conv2d(net, 64, [3, 3], strides=1, padding='SAME', kernel_initializer=he_init, name='USamp_W2')
-    net = activation(net, name='USamp_A2')
-    net = batch_norm(net, is_training, scope='USamp_BN2')
+    # restore to original size
+    net = restoring_branch(
+        net,
+        16,
+        activation,
+        is_training,
+        init=he_init,
+        name='Res1')
 
+    # output layer
     net = L.conv2d(
         net,
         1, [5, 5],
@@ -146,7 +146,7 @@ class Model(BaseModel):
                 self.logits, self.y, axis=[1, 2])
             self.train_step = tf.train.AdamOptimizer(
                 self.config.learning_rate).minimize(
-                    self.cross_entropy, global_step=self.global_step_tensor)
+                self.cross_entropy, global_step=self.global_step_tensor)
 
     def init_saver(self):
         # here you initalize the tensorflow saver that will be used in saving the checkpoints.
