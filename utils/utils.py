@@ -36,12 +36,12 @@ def get_config_from_json(json_file):
 def process_config(jsonfile):
     config, _ = get_config_from_json(jsonfile)
     run = config.run
-    version = config.version
+    version = config.dir
     config.summary_dir = os.path.join(
-        '../experiments_v{}_run_{}'.format(version, run), config.exp_name[:-2],
+        '../experiments_{}_run_{}'.format(version, run), config.exp_name[:-2],
         'summary/')
     config.checkpoint_dir = os.path.join(
-        '../experiments_v{}_run_{}'.format(version, run), config.exp_name[:-2],
+        '../experiments_{}_run_{}'.format(version, run), config.exp_name[:-2],
         'checkpoint/')
     return config
 

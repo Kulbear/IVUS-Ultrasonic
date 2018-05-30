@@ -11,17 +11,18 @@ DIR = 'configs'
 
 parameter_dict = {
     "version": [1],  # model version
-    "num_epochs": [256],
-    "num_iter_per_epoch": [32],
+    "num_epochs": [48],
+    "num_iter_per_epoch": [10],
     "learning_rate": [1e-4],  # tested a lot, no need to change
-    "batch_size": [6],  # change to larger values requires more memory
+    "batch_size": [4],  # change to larger values requires more memory
     "state_size": [[256, 256, 1]],  # image size
     "max_to_keep": [1],  # kept model weights, don't change
     "is_training": [1],  # for batch norm, don't change
     "activation": ['prelu'],
-    "pooling": ['max', 'avg'],
-    "target": ['Lumen'],  # task
-    "run": range(1, 6)  # how many models we want for each
+    "pooling": ['max'],
+    "target": ['Lumen', 'Media'],  # task
+    "run": range(1, 5),  # how many models we want for each,
+    "dir": ['AM', 'AN', 'AS', 'AZ', 'HM', 'HN', 'HS', 'OC', 'OM', 'ON', 'OS', 'ZI']
 }
 
 grid = sorted(list(ParameterGrid(parameter_dict)), key=lambda x: x['target'])
@@ -32,8 +33,8 @@ except:
     os.mkdir(DIR)
 
 for i in grid:
-    i['exp_name'] = 'V{}-Journal-ImageSize{}-Epoch{}-Iter{}-LR{}-BS{}-{}-{}-{}-{}'.format(
-        i['version'], i['state_size'][0], i['num_epochs'],
+    i['exp_name'] = '{}-Ultrasonic-ImageSize{}-Epoch{}-Iter{}-LR{}-BS{}-{}-{}-{}-{}'.format(
+        i['dir'], i['state_size'][0], i['num_epochs'],
         i['num_iter_per_epoch'], i['learning_rate'], i['batch_size'],
         i['activation'], i['pooling'], i['target'], i['run'])
 
