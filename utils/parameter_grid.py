@@ -11,8 +11,8 @@ DIR = 'configs'
 
 parameter_dict = {
     "version": [1],  # model version
-    "num_epochs": [48],
-    "num_iter_per_epoch": [10],
+    "num_epochs": [96],
+    "num_iter_per_epoch": [32],
     "learning_rate": [1e-4],  # tested a lot, no need to change
     "batch_size": [4],  # change to larger values requires more memory
     "state_size": [[256, 256, 1]],  # image size
@@ -21,8 +21,8 @@ parameter_dict = {
     "activation": ['prelu'],
     "pooling": ['max'],
     "target": ['Lumen', 'Media'],  # task
-    "run": range(1, 5),  # how many models we want for each,
-    "dir": ['AM', 'AN', 'AS', 'AZ', 'HM', 'HN', 'HS', 'OC', 'OM', 'ON', 'OS', 'ZI']
+    "run": range(1, 11),  # how many models we want for each,
+    "dir": ['ON_S']
 }
 
 grid = sorted(list(ParameterGrid(parameter_dict)), key=lambda x: x['target'])
