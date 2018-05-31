@@ -22,10 +22,10 @@ class BaseModel:
         latest_checkpoint = tf.train.latest_checkpoint(
             self.config.checkpoint_dir)
         if latest_checkpoint:
-            print(
-                'Loading model checkpoint {} ...\n'.format(latest_checkpoint))
+            # print(
+            #     'Loading model checkpoint {} ...\n'.format(latest_checkpoint))
             self.saver.restore(sess, latest_checkpoint)
-            print('Model loaded')
+            # print('Model loaded')
 
     # initialize a tensorflow variable to use it as epoch counter
     def init_cur_epoch(self):

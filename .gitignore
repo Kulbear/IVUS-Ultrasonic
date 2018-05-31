@@ -11,3 +11,9 @@ configs
 exp*
 
 result.txt
+
+.idea
+
+*.mat
+
+*.npy

@@ -122,7 +122,6 @@ def _net(input_tensor, is_training=True, config={}):
 class Model(BaseModel):
     def __init__(self, config):
         super(Model, self).__init__(config)
-        print('Using paper ready model v1 ...')
         self.build_model()
         self.init_saver()
 
@@ -141,7 +140,7 @@ class Model(BaseModel):
         self.logits = _net(self.x, config=self.config)
 
         with tf.name_scope('loss'):
-            print(self.logits, self.y)
+            # print(self.logits, self.y)
             self.cross_entropy = 1 - tl.cost.dice_coe(
                 self.logits, self.y, axis=[1, 2])
             self.train_step = tf.train.AdamOptimizer(
