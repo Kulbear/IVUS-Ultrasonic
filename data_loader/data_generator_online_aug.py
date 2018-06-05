@@ -31,8 +31,11 @@ class IVUSDataGenerator:
 
         # load data here
         print('Load data for the {} model...'.format(config.target))
-        self.input = np.expand_dims(np.load(
-            path.join(path.abspath(cdir), data_dir, 'raw_train_data_{}.npy'.format(img_size))), -1)
+        self.input = np.expand_dims(
+            np.load(
+                path.join(
+                    path.abspath(cdir), data_dir,
+                    'raw_train_data_{}.npy'.format(img_size))), -1)
         self.y = np.load(
             path.join(
                 path.abspath(cdir), data_dir,
@@ -42,8 +45,9 @@ class IVUSDataGenerator:
 
         self.test_input = np.expand_dims(
             np.load(
-                path.join(path.abspath(cdir), data_dir, 'test_data_{}.npy'.format(img_size))),
-            -1)
+                path.join(
+                    path.abspath(cdir), data_dir,
+                    'test_data_{}.npy'.format(img_size))), -1)
         self.test_y = np.load(
             path.join(
                 path.abspath(cdir), data_dir,
@@ -71,11 +75,18 @@ class IVUSDataGenerator:
             self.counter == 0
             self.input_batches = []
             self.mask_batches = []
-            idx = np.random.choice(self.input.shape[0], nb_source_img, replace=False)
-            aug = ImageAugmentor(self.input[idx], mode='SIMPLE', labels=self.y[idx], end_to_end=True)
+            idx = np.random.choice(
+                self.input.shape[0], nb_source_img, replace=False)
+            aug = ImageAugmentor(
+                self.input[idx],
+                mode='SIMPLE',
+                labels=self.y[idx],
+                end_to_end=True)
             aug_x, aug_y = aug.generate()
-            aug_x = list(aug_x[:aug_x.shape[0] // 5 * 3])  # select the first 3/5
-            aug_y = list(aug_y[:aug_y.shape[0] // 5 * 3])  # the second 1/2 are all black images
+            aug_x = list(
+                aug_x[:aug_x.shape[0] // 5 * 3])  # select the first 3/5
+            aug_y = list(aug_y[:aug_y.shape[0] // 5 * 3]
+                         )  # the second 1/2 are all black images
 
             aug_x, aug_y = shuffle_lists(aug_x, aug_y)
 

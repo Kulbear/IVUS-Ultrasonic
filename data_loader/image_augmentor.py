@@ -2,6 +2,7 @@ from imgaug import augmenters as iaa
 
 import numpy as np
 
+
 class ImageAugmentor:
     def __init__(self, images, mode='SIMPLE', labels=None, end_to_end=True):
         self._source_images = images
@@ -52,6 +53,6 @@ class ImageAugmentor:
             for grp_idx in range(length):
                 self._result_images.append(
                     aug.augment_images(
-                        np.array(
-                            (self._result_images[grp_idx])).astype(np.uint8)))
+                        np.array((self._result_images[grp_idx])).astype(
+                            np.uint8)))
                 self._result_labels.append(self._result_labels[grp_idx])

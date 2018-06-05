@@ -16,27 +16,43 @@ class IVUSDataGenerator:
         self.counter = 0
         data_dir = 'processed_augmentations'
         data_dir = path.join(data_dir, config.dir)
-        print(data_dir)
+        print('[INFO] :: Reading data from ->', data_dir)
 
-        # load data here
-        print('Load data for the {} model...'.format(config.target))
-        self.input = np.expand_dims(np.load(
-            path.join(path.abspath(cdir), data_dir, 'train_img_{}.npy'.format(img_size))), -1)
+        # load train and test set and we split 1/10 of the train set to be the validation set
+        print('[INFO] :: Loading data for the {} model...'.format(
+            config.target))
+        self.input = np.expand_dims(
+            np.load(
+                path.join(
+                    path.abspath(cdir), data_dir, 'train_img_{}.npy'.format(
+                        img_size))), -1).astype(np.float32) / 255
         self.y = np.load(
             path.join(
                 path.abspath(cdir), data_dir,
                 'train_{}_512.npy'.format(target)))
-        print(self.input.shape)
-        print(self.y.shape)
-
+        val_size = int(self.input.shape[0] // 10 * 9)
+        self.val_input = self.input[val_size:]
+        self.val_y = self.y[val_size:]
+        self.input = self.input[:val_size]
+        self.y = self.y[:val_size]
         self.test_input = np.expand_dims(
             np.load(
-                path.join(path.abspath(cdir), data_dir, 'test_img_{}.npy'.format(img_size))),
-            -1)
+                path.join(
+                    path.abspath(cdir), data_dir, 'test_img_{}.npy'.format(
+                        img_size))), -1).astype(np.float32) / 255
         self.test_y = np.load(
             path.join(
                 path.abspath(cdir), data_dir,
                 'test_{}_512.npy'.format(target))).astype(np.uint8)
+
+        print('[INFO] :: Data loaded...\nDatasets are splited to\n')
+        print('Training...')
+        print(self.input.shape)
+        print(self.y.shape)
+        print('Validation...')
+        print(self.val_input.shape)
+        print(self.val_y.shape)
+        print('Testing...')
         print(self.test_input.shape)
         print(self.test_y.shape)
 
