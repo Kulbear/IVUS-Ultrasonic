@@ -11,9 +11,9 @@ class IVUSDataGenerator:
         self.config = config
         img_size = config.state_size[0]
         target = config.target.lower()
-        self.input_batches = []
-        self.mask_batches = []
-        self.counter = 0
+
+        self.data_format = self.config.data_format
+        expanded_dim = 1 if self.data_format == 'NCHW' else -1
         data_dir = 'processed_augmentations'
         data_dir = path.join(data_dir, config.dir)
         print('[INFO] :: Reading data from ->', data_dir)
@@ -25,7 +25,7 @@ class IVUSDataGenerator:
             np.load(
                 path.join(
                     path.abspath(cdir), data_dir, 'train_img_{}.npy'.format(
-                        img_size))), -1).astype(np.float32) / 255
+                        img_size))), expanded_dim).astype(np.float32) / 255
         self.y = np.load(
             path.join(
                 path.abspath(cdir), data_dir,
@@ -39,7 +39,7 @@ class IVUSDataGenerator:
             np.load(
                 path.join(
                     path.abspath(cdir), data_dir, 'test_img_{}.npy'.format(
-                        img_size))), -1).astype(np.float32) / 255
+                        img_size))), expanded_dim).astype(np.float32) / 255
         self.test_y = np.load(
             path.join(
                 path.abspath(cdir), data_dir,

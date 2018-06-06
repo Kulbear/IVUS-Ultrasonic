@@ -11,8 +11,9 @@ DIR = 'configs'
 
 parameter_dict = {
     "version": [1],  # model version
-    "num_epochs": [150],
-    "num_iter_per_epoch": [32],
+    "num_epochs": [10],
+    "data_format": ['NCHW'],
+    "num_iter_per_epoch": [10],
     "learning_rate": [1e-4],  # tested a lot, no need to change
     "batch_size": [4],  # change to larger values requires more memory
     "state_size": [[256, 256, 1]],  # image size
@@ -20,9 +21,9 @@ parameter_dict = {
     "is_training": [1],  # for batch norm, don't change
     "activation": ['prelu'],
     "pooling": ['max'],
-    "target": ['Lumen', 'Media'],  # task
-    "run": range(1, 11),  # how many models we want for each,
-    "dir": ['ON_RNn', 'ON_RDn']
+    "target": ['Lumen'],  # task
+    "run": range(1, 2),  # how many models we want for each,
+    "dir": ['ON_R']
 }
 
 grid = sorted(list(ParameterGrid(parameter_dict)), key=lambda x: x['target'])
