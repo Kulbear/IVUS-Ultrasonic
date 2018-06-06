@@ -145,10 +145,12 @@ def downsampling_branch(net,
           \==>pooling(K2S2)==========>/
     """
     _data_format = 'channels_first' if data_format == 'NCHW' else 'channels_last'
+    ksize = [1, 1, 2, 2] if data_format == 'NCHW' else [1, 2, 2, 1]
+    strides = [1, 1, 2, 2] if data_format == 'NCHW' else [1, 2, 2, 1]
     net_pool = pooling(
         net,
-        ksize=[1, 1, 2, 2],
-        strides=[1, 1, 2, 2],
+        ksize=ksize,
+        strides=strides,
         padding='SAME',
         data_format=data_format,
         name='{}_Pool'.format(lyr_name))
@@ -162,7 +164,7 @@ def downsampling_branch(net,
         name='{}_PoolW'.format(lyr_name))
     net_conv = activation(net_conv, name='{}_PoolW_A'.format(lyr_name))
     net_conv = batch_norm(net_conv, is_training)
-    net_ = tf.concat(axis=1, values=[net_pool, net_conv])
+    net_ = tf.concat(axis=1 if data_format == 'NCHW' else -1, values=[net_pool, net_conv])
 
     return net_
 
@@ -198,7 +200,6 @@ def restoring_branch(net,
                      init=he_init,
                      data_format='channels_first',
                      name=''):
-    print(net)
     net_ = L.conv2d_transpose(
         net,
         depth, [2, 2],
@@ -219,5 +220,4 @@ def restoring_branch(net,
         name='{}_W2'.format(name))
     net_ = activation(net_, name='{}_A2'.format(name))
     net_ = batch_norm(net_, is_training)
-    print(net_)
     return net_

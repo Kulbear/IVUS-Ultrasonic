@@ -38,7 +38,8 @@ def _net(input_tensor, is_training=True, config={}):
             # downsampling path
             if lyr_name != 'Enc_1':
                 net = downsampling_branch(net, enc_lyr_depth[idx], pooling,
-                                          activation, is_training, lyr_name)
+                                          activation, is_training, lyr_name,
+                                          data_format=data_format)
 
             # refining branch
             ref = refining_branch(
@@ -48,7 +49,8 @@ def _net(input_tensor, is_training=True, config={}):
                 activation,
                 is_training,
                 lyr_name,
-                init=he_init)
+                init=he_init,
+                data_format='channels_first' if data_format == 'NCHW' else 'channels_last')
 
             # main branch
             net = main_branch(
@@ -59,7 +61,8 @@ def _net(input_tensor, is_training=True, config={}):
                 activation,
                 is_training,
                 lyr_name,
-                init=he_init)
+                init=he_init,
+                data_format='channels_first' if data_format == 'NCHW' else 'channels_last')
             enc_lyrs[lyr_name] = net
             print(net)
 
@@ -77,6 +80,7 @@ def _net(input_tensor, is_training=True, config={}):
                 activation,
                 is_training,
                 lyr_name,
+                data_format='channels_first' if data_format == 'NCHW' else 'channels_last',
                 init=he_init)
 
             # refining branch
@@ -87,9 +91,10 @@ def _net(input_tensor, is_training=True, config={}):
                 activation,
                 is_training,
                 lyr_name,
+                data_format='channels_first' if data_format == 'NCHW' else 'channels_last',
                 init=he_init)
             net = tf.concat(
-                axis=1, values=[enc_lyrs['Enc_{}'.format(lyr_name[-1])], net])
+                axis=1 if data_format == 'NCHW' else -1, values=[enc_lyrs['Enc_{}'.format(lyr_name[-1])], net])
             # main branch
             net = main_branch(
                 net,
@@ -99,12 +104,14 @@ def _net(input_tensor, is_training=True, config={}):
                 activation,
                 is_training,
                 lyr_name,
+                data_format='channels_first' if data_format == 'NCHW' else 'channels_last',
                 init=he_init)
             print(net)
 
     # restore to original size
     net = restoring_branch(
-        net, 16, activation, is_training, init=he_init, name='Res1')
+        net, 16, activation, is_training, init=he_init, 
+        data_format='channels_first' if data_format == 'NCHW' else 'channels_last',name='Res1')
     # output layer
     net = L.conv2d(
         net,
@@ -112,7 +119,7 @@ def _net(input_tensor, is_training=True, config={}):
         strides=1,
         padding='SAME',
         kernel_initializer=he_init,
-        data_format='channels_first',
+        data_format='channels_first' if data_format == 'NCHW' else 'channels_last',
         name='Output')
     net = tf.sigmoid(net, name='Output_Sigmoid')
     print(net)
