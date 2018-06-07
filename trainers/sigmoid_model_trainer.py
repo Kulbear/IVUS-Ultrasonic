@@ -49,7 +49,7 @@ class SigmoidTrainer(BaseTrain):
 
     def test(self):
         test_losses = []
-        test_subsets = self.data.get_test_subsets(self.config.batch_size)
+        test_subsets = self.data.get_test_subsets(29)
         for subset in test_subsets:
             test_x, test_y = subset
             feed_dict = {
@@ -61,7 +61,7 @@ class SigmoidTrainer(BaseTrain):
             loss = loss * test_x.shape[0]
             test_losses.append(loss)
 
-        return np.sum(test_losses) / self.data.test_input.shape[0]
+        return np.sum(test_losses) / self.data.test_input.shape[0] / 512 / 512 / 29
 
     def train_step(self):
         batch_x, batch_y = self.data.next_batch(self.config.batch_size)

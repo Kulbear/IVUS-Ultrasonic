@@ -30,7 +30,9 @@ class IVUSDataGenerator:
             path.join(
                 path.abspath(cdir), data_dir,
                 'train_{}_512.npy'.format(target)))
-        val_size = int(self.input.shape[0] // 10 * 9)
+        val_size = -1
+        # val_size = int(self.input.shape[0] // 10 * 9)
+
         self.val_input = self.input[val_size:]
         self.val_y = self.y[val_size:]
         self.input = self.input[:val_size]

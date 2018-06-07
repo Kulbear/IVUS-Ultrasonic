@@ -157,8 +157,10 @@ class Model(BaseModel):
 
         with tf.name_scope('loss'):
             # print(self.logits, self.y)
-            self.cross_entropy = 1 - tl.cost.dice_coe(
-                self.logits, self.y, axis=[1, 2])
+            self.cross_entropy = (
+                1 - tl.cost.dice_coe(self.logits, self.y, axis=[1, 2])) * (
+                    tf.nn.sigmoid_cross_entropy_with_logits(
+                        labels=self.y, logits=self.logits))
             self.train_step = tf.train.AdamOptimizer(
                 self.config.learning_rate).minimize(
                     self.cross_entropy, global_step=self.global_step_tensor)
