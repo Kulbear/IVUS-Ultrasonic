@@ -64,7 +64,7 @@ def _net(input_tensor, is_training=True, config={}):
                 init=he_init,
                 data_format='channels_first' if data_format == 'NCHW' else 'channels_last')
             enc_lyrs[lyr_name] = net
-            print(net)
+            # print(net)
 
     # decoder
     dec_lyr_names = ['Dec_5', 'Dec_4', 'Dec_3', 'Dec_2', 'Dec_1']
@@ -106,7 +106,7 @@ def _net(input_tensor, is_training=True, config={}):
                 lyr_name,
                 data_format='channels_first' if data_format == 'NCHW' else 'channels_last',
                 init=he_init)
-            print(net)
+            # print(net)
 
     # restore to original size
     net = restoring_branch(
@@ -122,7 +122,7 @@ def _net(input_tensor, is_training=True, config={}):
         data_format='channels_first' if data_format == 'NCHW' else 'channels_last',
         name='Output')
     net = tf.sigmoid(net, name='Output_Sigmoid')
-    print(net)
+    # print(net)
     net = tf.reshape(net, (-1, 512, 512))
 
     return net

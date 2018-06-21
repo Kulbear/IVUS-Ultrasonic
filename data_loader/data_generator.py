@@ -1,12 +1,10 @@
 import os.path as path
 import h5py
 import os
+import gc
 import numpy as np
-from .image_augmentor import ImageAugmentor
 
 cdir = '..'
-
-img_amount = 719
 
 class IVUSDataGenerator:
     def __init__(self, config):
@@ -36,7 +34,7 @@ class IVUSDataGenerator:
             with h5py.File(path.join('../', source_dir, fname), 'r') as file:
                 keys = list((file[data_name]['train']))
                 m = np.array(file[data_name]['train']['img']).shape[0]
-                idx = np.random.choice(m, m // 4)
+                idx = np.random.choice(m, m // 5)
                 for k in keys:
                     data = file[data_name]['train'][k]
                     data = switch_dim(np.array(data))[idx]
@@ -44,11 +42,15 @@ class IVUSDataGenerator:
                         mask_.append(data)
                     elif k == 'img':
                         img_.append(data)
+                    del data
+                    gc.collect()
 
-        self.input = np.expand_dims(np.vstack(img_).copy(), expanded_dim).astype(np.float32) / 255
+        self.input = np.expand_dims(np.vstack(img_), expanded_dim).astype(np.float32) / 255
         del img_
-        self.y = np.vstack(mask_).copy()
+        gc.collect()
+        self.y = np.vstack(mask_)
         del mask_
+        gc.collect()
 
         # val_size = -1
         # val_size = int(self.input.shape[0] // 10 * 9)
