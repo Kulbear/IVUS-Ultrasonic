@@ -4,9 +4,9 @@ import numpy as np
 import tensorflow as tf
 
 
-class SigmoidTrainer(BaseTrain):
+class SoftmaxTrainer(BaseTrain):
     def __init__(self, sess, model, data, config, logger):
-        super(SigmoidTrainer, self).__init__(sess, model, data, config, logger)
+        super(SoftmaxTrainer, self).__init__(sess, model, data, config, logger)
 
     def train_epoch(self):
         ep = self.sess.run(self.model.cur_epoch_tensor)

@@ -1,6 +1,7 @@
 import tensorflow as tf
 
 from .ops import *
+from .losses import *
 from base.base_model import BaseModel
 from tensorflow import layers as L
 
@@ -115,14 +116,13 @@ def _net(input_tensor, is_training=True, config={}):
     # output layer
     net = L.conv2d(
         net,
-        1, [5, 5],
+        3, [5, 5],
         strides=1,
         padding='SAME',
         kernel_initializer=he_init,
         data_format='channels_first' if data_format == 'NCHW' else 'channels_last',
         name='Output')
-    net = tf.sigmoid(net, name='Output_Sigmoid')
-    # print(net)
+
     net = tf.reshape(net, (-1, 512, 512))
 
     return net
@@ -156,10 +156,10 @@ class Model(BaseModel):
         self.logits = _net(self.x, config=self.config)
 
         with tf.name_scope('loss'):
-            self.cross_entropy = 1 - tl.cost.dice_coe(self.logits, self.y, axis=[1, 2])
+            self.loss = softmax_cross_entropy(self.logits, self.y)
             self.train_step = tf.train.AdamOptimizer(
                 self.config.learning_rate).minimize(
-                    self.cross_entropy, global_step=self.global_step_tensor)
+                    self.loss, global_step=self.global_step_tensor)
 
     def init_saver(self):
         # here you initalize the tensorflow saver that will be used in saving the checkpoints.

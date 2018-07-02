@@ -1,14 +1,14 @@
 import tensorflow as tf
 
 import _init_paths
-from data_loader.data_generator import IVUSDataGenerator
+from data_loader.data_generator_softmax import IVUSDataGenerator
 from utils.logger import Logger
 from utils.utils import get_args, create_dirs, process_config
 
 # change this when working on different models
 from models.ivusnet import Model
 # change this when training with prob masks
-from trainers.sigmoid_model_trainer import SigmoidTrainer
+from trainers.softmax_model_trainer import SigmoidTrainer
 
 
 def main():

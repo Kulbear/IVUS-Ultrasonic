@@ -135,11 +135,11 @@ class Model(BaseModel):
 
         with tf.name_scope('loss'):
             print(self.logits, self.y)
-            self.cross_entropy = 1 - tl.cost.dice_coe(
+            self.loss = 1 - tl.cost.dice_coe(
                 self.logits, self.y, axis=[1, 2])
             self.train_step = tf.train.AdamOptimizer(
                 self.config.learning_rate).minimize(
-                    self.cross_entropy, global_step=self.global_step_tensor)
+                    self.loss, global_step=self.global_step_tensor)
 
     def init_saver(self):
         # here you initalize the tensorflow saver that will be used in saving the checkpoints.
