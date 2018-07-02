@@ -13,37 +13,6 @@ def batch_norm(inputs, is_training, data_format='channels_first'):
       momentum=0.95, epsilon=1e-5, center=True,
       scale=True, training=is_training, fused=True)
 
-# def batch_norm(input,
-#                is_training,
-#                momentum=0.9,
-#                epsilon=1e-5,
-#                in_place_update=True,
-#                data_format='NCHW',
-#                scope=None):
-#     if in_place_update:
-#         return tf.contrib.layers.batch_norm(
-#             input,
-#             decay=momentum,
-#             center=True,
-#             scale=True,
-#             epsilon=epsilon,
-#             fused=True,
-#             data_format=data_format,
-#             updates_collections=None,
-#             is_training=is_training,
-#             scope=scope)
-#     else:
-#         return tf.contrib.layers.batch_norm(
-#             input,
-#             decay=momentum,
-#             center=True,
-#             scale=True,
-#             fused=True,
-#             epsilon=epsilon,
-#             data_format=data_format,
-#             is_training=is_training,
-#             scope=scope)
-
 
 def main_branch(net,
                 ref,
